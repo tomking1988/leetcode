@@ -33,22 +33,29 @@ public class RandomizedCollection {
 
     /** Removes a value from the collection. Returns true if the collection contained the specified element. */
     public boolean remove(int val) {
+       // System.out.println("Remove val " + val);
         if(index.containsKey(val)){
             Set<Integer> record = index.get(val);
             int valPos = record.iterator().next();
+            record.remove(valPos);
+            if(valPos != list.size() - 1){
+                //Move last val to given val position
+                int lastVal = list.get(list.size() -  1);
+                list.set(valPos, lastVal);
+                //System.out.println(lastVal);
+                index.get(lastVal).remove(list.size() -1);
+                index.get(lastVal).add(valPos);
+            }
 
-            //Move last val to given val position
-            int lastVal = list.get(list.size() -  1);
-            list.set(valPos, lastVal);
-            index.get(lastVal).remove(list.size() -1);
-            index.get(lastVal).add(valPos);
+
+
 
             //Remove val
-            record.remove(valPos);
             list.remove(list.size() - 1);
             if(record.size() == 0){
                 index.remove(val);
             }
+            //System.out.println("Test");
             return true;
         } else {
             return false;
@@ -57,6 +64,9 @@ public class RandomizedCollection {
 
     /** Get a random element from the collection. */
     public int getRandom() {
+        if(list.size() == 0){
+            return  0;
+        }
         int randomPos = this.random.nextInt(list.size());
         return this.list.get(randomPos);
     }
